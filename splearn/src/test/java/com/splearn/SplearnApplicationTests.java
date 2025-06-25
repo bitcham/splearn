@@ -1,4 +1,4 @@
-package com.cham.splearn;
+package com.splearn;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
