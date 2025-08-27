@@ -39,6 +39,27 @@
 ## Domain Model
 
 ### Member
+_Entity_
+#### Attributes
+- email: ID
+- nickname
+- passwordHash
+- status
+#### Behaviors
+- constructor(): email, nickname, passwordHash, status
+- activate()
+- deactivate()
+#### Rules
+- After user creation, status is set to pending 
+- When requirements are met, status changes to active
+- Only when status is active, deactivation is possible
+
+### MemberStatus
+_Enum_
+#### Constants
+- PENDING
+- ACTIVE
+- DEACTIVATED: withdrawn member
 
 ### Instructor 
 
