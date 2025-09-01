@@ -5,37 +5,54 @@ import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 
 
 class MemberTest {
 
+    private lateinit var member: Member
+    private lateinit var passwordEncoder: PasswordEncoder
+
+    @BeforeEach
+    fun setup(){
+        passwordEncoder = object: PasswordEncoder {
+            override fun encode(password: String): String {
+                return password.reversed()
+            }
+
+            override fun matches(password: String, passwordHash: String): Boolean {
+                return encode(password) == passwordHash
+            }
+        }
+
+        member = Member.invoke("cham@splearn.app", "cham", "secret", passwordEncoder)
+
+    }
+
+
     @Test
     fun createMember() {
-        var member = Member("cham@splearn.app", "cham", "secret")
-
         assertThat(member.status).isEqualTo(PENDING)
     }
 
     @Test
-    fun constructorNullCheck() {
+    fun constructorBlankCheck() {
         assertThatThrownBy {
-            Member("   ", "cham", "secret")
+            Member.invoke("   ", "cham", "secret", passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
         assertThatThrownBy {
-            Member("cham@splearn.com", "   ", "secret")
+            Member.invoke("cham@splearn.com", "   ", "secret", passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
         assertThatThrownBy {
-            Member("cham@splearn.com", "cham", "   ")
+            Member.invoke("cham@splearn.com", "cham", "   ", passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
     fun activate(){
-        val member =  Member("cham@splearn.com", "cham", "secret")
-
         member.activate()
 
         assertThat(member.status).isEqualTo(MemberStatus.ACTIVE)
@@ -43,8 +60,6 @@ class MemberTest {
 
     @Test
     fun activateFail(){
-        val member =  Member("cham@splearn.com", "cham", "secret")
-
         member.activate()
 
         assertThatThrownBy {
@@ -54,9 +69,8 @@ class MemberTest {
 
     @Test
     fun deactivate() {
-        val member = Member("cham@splearn.com", "cham", "secret")
-
         member.activate()
+
         member.deactivate()
 
         assertThat(member.status).isEqualTo(MemberStatus.DEACTIVATED)
@@ -64,10 +78,39 @@ class MemberTest {
 
     @Test
     fun deactivateFail() {
-        val member = Member("cham@splearn.com", "cham", "secret")
-
         assertThatThrownBy {
             member.deactivate()
         }.isInstanceOf(IllegalStateException::class.java)
     }
+
+    @Test
+    fun verifyPassword() {
+        assertTrue{
+            member.verifyPassword("secret", passwordEncoder)
+        }
+        assertFalse{
+            member.verifyPassword("wrongpassword", passwordEncoder)
+        }
+    }
+
+    @Test
+    fun changeNickname() {
+        assertThat(member.nickname).isEqualTo("cham")
+
+        member.changeNickname("newCham")
+
+        assertThat(member.nickname).isEqualTo("newCham")
+    }
+
+    @Test
+    fun changePassword(){
+        member.changePassword("verysecret", passwordEncoder)
+
+        assertTrue{
+            member.verifyPassword("verysecret", passwordEncoder)
+        }
+
+    }
+
+
 }

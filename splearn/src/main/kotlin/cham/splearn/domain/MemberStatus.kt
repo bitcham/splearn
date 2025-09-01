@@ -1,5 +1,5 @@
 package cham.splearn.domain
 
-enum class MemberStatus{
+enum class MemberStatus {
     PENDING, ACTIVE, DEACTIVATED
 }

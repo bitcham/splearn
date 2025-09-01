@@ -46,14 +46,19 @@ _Entity_
 - `passwordHash`
 - `status`
 #### Behaviors
-- `constructor()`: email, nickname, passwordHash, status
+- `create()`: email, nickname, password, passwordEncoder, status
 - `activate()`
 - `deactivate()`
+- `verifyPassword()`
+- `changeNickname()`
+- `changePassword()`
 #### Rules
 - After user creation, status is set to pending 
 - When requirements are met, status changes to active
 - Only when status is pending, activation is possible
 - Only when status is active, deactivation is possible
+- User's password is stored as a hash value
+
 
 ### MemberStatus
 _Enum_
@@ -61,6 +66,12 @@ _Enum_
 - PENDING
 - ACTIVE
 - DEACTIVATED: withdrawn member
+
+### PasswordEncoder
+_Domain Service_
+#### Behaviors
+- `encode()`: returns passwordHash
+- `matches()`: returns boolean
 
 ### Instructor 
 
