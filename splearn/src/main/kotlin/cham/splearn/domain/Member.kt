@@ -10,28 +10,34 @@ data class Member private constructor(
     var passwordEncoder: PasswordEncoder,
     var status: MemberStatus = PENDING
 ){
-    init {
-        require(email.isNotBlank()) { "Email cannot be blank" }
-        require(nickname.isNotBlank()) { "Nickname cannot be blank" }
-        require(passwordHash.isNotBlank()) { "Password hash cannot be blank" }
-    }
 
-    companion object create{
+    companion object {
 
-        operator fun invoke(email: String, nickname: String, password: String, passwordEncoder: PasswordEncoder): Member {
-            val passwordHash = passwordEncoder.encode(password)
-            return Member(email, nickname, passwordHash, passwordEncoder)
+        fun create(createRequest: MemberCreateRequest, passwordEncoder: PasswordEncoder): Member {
+            require(createRequest.email.isNotBlank()) { "Email cannot be blank" }
+            require(createRequest.nickname.isNotBlank()) { "Nickname cannot be blank" }
+            require(createRequest.password.isNotBlank()) { "Password cannot be blank" }
+
+            return Member(
+                email = createRequest.email,
+                nickname = createRequest.nickname,
+                passwordHash = passwordEncoder.encode(createRequest.password),
+                passwordEncoder = passwordEncoder
+            )
         }
 
     }
 
     fun activate() {
         check(status == PENDING){ "Only members with PENDING status can be activated." }
+
         status = ACTIVE
     }
 
+    fun isActive() = status == ACTIVE
+
     fun deactivate() {
-        check(status == ACTIVE){ "Only members with ACTIVE status can be deactivated." }
+        check(isActive()){ "Only members with ACTIVE status can be deactivated." }
 
         status = DEACTIVATED
     }

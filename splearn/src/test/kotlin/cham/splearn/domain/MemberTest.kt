@@ -26,7 +26,7 @@ class MemberTest {
             }
         }
 
-        member = Member.invoke("cham@splearn.app", "cham", "secret", passwordEncoder)
+        member = Member.create(MemberCreateRequest("cham@splearn.app", "cham", "secret"), passwordEncoder)
 
     }
 
@@ -39,15 +39,15 @@ class MemberTest {
     @Test
     fun constructorBlankCheck() {
         assertThatThrownBy {
-            Member.invoke("   ", "cham", "secret", passwordEncoder)
+            Member.create(MemberCreateRequest("   ", "cham", "secret"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
         assertThatThrownBy {
-            Member.invoke("cham@splearn.com", "   ", "secret", passwordEncoder)
+            Member.create(MemberCreateRequest("cham@splearn.com", "   ", "secret"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
         assertThatThrownBy {
-            Member.invoke("cham@splearn.com", "cham", "   ", passwordEncoder)
+            Member.create(MemberCreateRequest("cham@splearn.com", "cham", "   "), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
@@ -110,6 +110,19 @@ class MemberTest {
             member.verifyPassword("verysecret", passwordEncoder)
         }
 
+    }
+
+    @Test
+    fun shouldBeActive(){
+        assertFalse(member.isActive())
+
+        member.activate()
+
+        assertTrue(member.isActive())
+
+        member.deactivate()
+
+        assertFalse(member.isActive())
     }
 
 
