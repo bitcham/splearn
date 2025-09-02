@@ -4,7 +4,7 @@ import cham.splearn.domain.MemberStatus.*
 
 @ConsistentCopyVisibility
 data class Member private constructor(
-    val email: String,
+    val email: Email,
     var nickname: String,
     var passwordHash: String,
     var passwordEncoder: PasswordEncoder,
@@ -19,7 +19,7 @@ data class Member private constructor(
             require(createRequest.password.isNotBlank()) { "Password cannot be blank" }
 
             return Member(
-                email = createRequest.email,
+                email = Email.of(createRequest.email),
                 nickname = createRequest.nickname,
                 passwordHash = passwordEncoder.encode(createRequest.password),
                 passwordEncoder = passwordEncoder

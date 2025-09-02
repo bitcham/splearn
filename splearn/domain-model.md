@@ -46,7 +46,7 @@ _Entity_
 - `passwordHash`
 - `status`
 #### Behaviors
-- `create()`: email, nickname, password, passwordEncoder, status
+- `create()`: MemberCreateRequest, status
 - `activate()`
 - `deactivate()`
 - `verifyPassword()`
@@ -59,6 +59,15 @@ _Entity_
 - Only when status is active, deactivation is possible
 - User's password is stored as a hash value
 
+### MemberCreateRequest
+_DTO_
+#### Attributes
+- `email`
+- `nickname`
+- `password`
+
+### Email
+_Value Object_
 
 ### MemberStatus
 _Enum_
