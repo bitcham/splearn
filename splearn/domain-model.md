@@ -68,6 +68,8 @@ _DTO_
 
 ### Email
 _Value Object_
+#### Behaviors
+- `of()` : validation
 
 ### MemberStatus
 _Enum_

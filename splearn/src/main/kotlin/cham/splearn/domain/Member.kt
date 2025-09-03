@@ -14,12 +14,11 @@ data class Member private constructor(
     companion object {
 
         fun create(createRequest: MemberCreateRequest, passwordEncoder: PasswordEncoder): Member {
-            require(createRequest.email.isNotBlank()) { "Email cannot be blank" }
             require(createRequest.nickname.isNotBlank()) { "Nickname cannot be blank" }
             require(createRequest.password.isNotBlank()) { "Password cannot be blank" }
 
             return Member(
-                email = Email.of(createRequest.email),
+                email = createRequest.email,
                 nickname = createRequest.nickname,
                 passwordHash = passwordEncoder.encode(createRequest.password),
                 passwordEncoder = passwordEncoder

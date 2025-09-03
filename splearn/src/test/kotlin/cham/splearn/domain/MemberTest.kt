@@ -26,7 +26,7 @@ class MemberTest {
             }
         }
 
-        member = Member.create(MemberCreateRequest("cham@splearn.app", "cham", "secret"), passwordEncoder)
+        member = Member.create(MemberCreateRequest(Email.of("cham@splearn.app"), "cham", "secret"), passwordEncoder)
 
     }
 
@@ -39,15 +39,15 @@ class MemberTest {
     @Test
     fun constructorBlankCheck() {
         assertThatThrownBy {
-            Member.create(MemberCreateRequest("   ", "cham", "secret"), passwordEncoder)
+            Member.create(MemberCreateRequest(Email.of("   "), "cham", "secret"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
         assertThatThrownBy {
-            Member.create(MemberCreateRequest("cham@splearn.com", "   ", "secret"), passwordEncoder)
+            Member.create(MemberCreateRequest(Email.of("cham@splearn.com"), "   ", "secret"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
         assertThatThrownBy {
-            Member.create(MemberCreateRequest("cham@splearn.com", "cham", "   "), passwordEncoder)
+            Member.create(MemberCreateRequest(Email.of("cham@splearn.com"), "cham", "   "), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
@@ -128,10 +128,10 @@ class MemberTest {
     @Test
     fun invalidEmail(){
         assertThatThrownBy {
-            Member.create(MemberCreateRequest("invalidemail", "cham", "secret"), passwordEncoder)
+            Member.create(MemberCreateRequest(Email.of("invalidemail"), "cham", "secret"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
-        Member.create(MemberCreateRequest("valid@gmail.com", "cham", "secret"), passwordEncoder)
+        Member.create(MemberCreateRequest(Email.of("valid@gmail.com"), "cham", "secret"), passwordEncoder)
     }
 
 
