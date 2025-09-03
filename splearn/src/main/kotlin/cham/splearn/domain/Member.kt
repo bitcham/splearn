@@ -1,5 +1,6 @@
 package cham.splearn.domain
 
+import cham.splearn.domain.PasswordEncoder
 import cham.splearn.domain.MemberStatus.*
 
 @ConsistentCopyVisibility
@@ -13,7 +14,7 @@ data class Member private constructor(
 
     companion object {
 
-        fun create(createRequest: MemberCreateRequest, passwordEncoder: PasswordEncoder): Member {
+        fun register(createRequest: MemberRegisterRequest, passwordEncoder: PasswordEncoder): Member {
             require(createRequest.nickname.isNotBlank()) { "Nickname cannot be blank" }
             require(createRequest.password.isNotBlank()) { "Password cannot be blank" }
 

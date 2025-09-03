@@ -1,7 +1,7 @@
 package cham.splearn.domain
 
+import cham.splearn.domain.PasswordEncoder
 import cham.splearn.domain.MemberStatus.PENDING
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Assertions.*
@@ -26,7 +26,7 @@ class MemberTest {
             }
         }
 
-        member = Member.create(MemberCreateRequest(Email.of("cham@splearn.app"), "cham", "secret"), passwordEncoder)
+        member = Member.register(MemberRegisterRequest(Email.of("cham@splearn.app"), "cham", "secret"), passwordEncoder)
 
     }
 
@@ -39,15 +39,15 @@ class MemberTest {
     @Test
     fun constructorBlankCheck() {
         assertThatThrownBy {
-            Member.create(MemberCreateRequest(Email.of("   "), "cham", "secret"), passwordEncoder)
+            Member.register(MemberRegisterRequest(Email.of("   "), "cham", "secret"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
         assertThatThrownBy {
-            Member.create(MemberCreateRequest(Email.of("cham@splearn.com"), "   ", "secret"), passwordEncoder)
+            Member.register(MemberRegisterRequest(Email.of("cham@splearn.com"), "   ", "secret"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
         assertThatThrownBy {
-            Member.create(MemberCreateRequest(Email.of("cham@splearn.com"), "cham", "   "), passwordEncoder)
+            Member.register(MemberRegisterRequest(Email.of("cham@splearn.com"), "cham", "   "), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
@@ -128,10 +128,10 @@ class MemberTest {
     @Test
     fun invalidEmail(){
         assertThatThrownBy {
-            Member.create(MemberCreateRequest(Email.of("invalidemail"), "cham", "secret"), passwordEncoder)
+            Member.register(MemberRegisterRequest(Email.of("invalidemail"), "cham", "secret"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
-        Member.create(MemberCreateRequest(Email.of("valid@gmail.com"), "cham", "secret"), passwordEncoder)
+        Member.register(MemberRegisterRequest(Email.of("valid@gmail.com"), "cham", "secret"), passwordEncoder)
     }
 
 

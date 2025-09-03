@@ -46,20 +46,20 @@ _Entity_
 - `passwordHash`
 - `status`
 #### Behaviors
-- `create()`: MemberCreateRequest, status
+- `companion object register()`: MemberRegisterRequest, status
 - `activate()`
 - `deactivate()`
 - `verifyPassword()`
 - `changeNickname()`
 - `changePassword()`
 #### Rules
-- After user creation, status is set to pending 
+- After user register, status is set to pending 
 - When requirements are met, status changes to active
 - Only when status is pending, activation is possible
 - Only when status is active, deactivation is possible
 - User's password is stored as a hash value
 
-### MemberCreateRequest
+### MemberRegisterRequest
 _DTO_
 #### Attributes
 - `email`
