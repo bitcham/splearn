@@ -1,5 +1,8 @@
 package cham.splearn.domain
 
+import jakarta.persistence.Embeddable
+
+@Embeddable
 @ConsistentCopyVisibility
 data class Email private constructor(val address: String) {
 

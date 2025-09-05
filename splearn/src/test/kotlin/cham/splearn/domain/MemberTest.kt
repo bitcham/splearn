@@ -1,12 +1,11 @@
 package cham.splearn.domain
 
-import cham.splearn.domain.PasswordEncoder
 import cham.splearn.domain.MemberStatus.PENDING
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 
 class MemberTest {
@@ -16,20 +15,11 @@ class MemberTest {
 
     @BeforeEach
     fun setup(){
-        passwordEncoder = object: PasswordEncoder {
-            override fun encode(password: String): String {
-                return password.reversed()
-            }
+        passwordEncoder = createPasswordEncoder()
 
-            override fun matches(password: String, passwordHash: String): Boolean {
-                return encode(password) == passwordHash
-            }
-        }
-
-        member = Member.register(MemberRegisterRequest(Email.of("cham@splearn.app"), "cham", "secret"), passwordEncoder)
+        member = Member.register(createMemberRegisterRequest(), passwordEncoder)
 
     }
-
 
     @Test
     fun createMember() {
@@ -128,10 +118,10 @@ class MemberTest {
     @Test
     fun invalidEmail(){
         assertThatThrownBy {
-            Member.register(MemberRegisterRequest(Email.of("invalidemail"), "cham", "secret"), passwordEncoder)
+            Member.register(createMemberRegisterRequest("invalidemail"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
-        Member.register(MemberRegisterRequest(Email.of("valid@gmail.com"), "cham", "secret"), passwordEncoder)
+        Member.register(createMemberRegisterRequest("valid@gmail.com"), passwordEncoder)
     }
 
 

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/C:\\Users\\ckaql\\splearn\\splearn\\src\\test\\kotlin\\cham\\splearn\\application\\required/**)",
+      "Read(/C:\\Users\\ckaql\\splearn\\splearn/**)",
+      "Read(/C:\\Users\\ckaql\\splearn\\splearn\\src\\main\\kotlin\\cham\\splearn\\application\\required/**)",
+      "Read(/C:\\Users\\ckaql\\splearn\\splearn\\src\\main\\kotlin\\cham\\splearn\\domain/**)",
+      "Read(/C:\\Users\\ckaql\\splearn\\splearn\\src\\test\\kotlin\\cham\\splearn\\application\\required/**)",
+      "Bash(./gradlew test:*)",
+      "Read(/C:\\Users\\ckaql\\splearn\\splearn\\src\\test\\kotlin\\cham\\splearn\\domain/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

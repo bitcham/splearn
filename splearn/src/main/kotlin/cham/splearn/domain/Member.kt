@@ -1,19 +1,38 @@
 package cham.splearn.domain
 
-import cham.splearn.domain.PasswordEncoder
 import cham.splearn.domain.MemberStatus.*
+import jakarta.persistence.Embedded
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
 
+@Entity
 @ConsistentCopyVisibility
 data class Member private constructor(
+
+    @Id @GeneratedValue
+    val id: Long = 0,
+
+    @Embedded
     val email: Email,
+
     var nickname: String,
+
     var passwordHash: String,
-    var passwordEncoder: PasswordEncoder,
+
+    @Enumerated(EnumType.STRING)
     var status: MemberStatus = PENDING
 ){
 
-    companion object {
+    protected constructor() : this(
+        email = Email.of("default@example.com"),
+        nickname = "",
+        passwordHash = ""
+    )
 
+    companion object {
         fun register(createRequest: MemberRegisterRequest, passwordEncoder: PasswordEncoder): Member {
             require(createRequest.nickname.isNotBlank()) { "Nickname cannot be blank" }
             require(createRequest.password.isNotBlank()) { "Password cannot be blank" }
@@ -21,11 +40,9 @@ data class Member private constructor(
             return Member(
                 email = createRequest.email,
                 nickname = createRequest.nickname,
-                passwordHash = passwordEncoder.encode(createRequest.password),
-                passwordEncoder = passwordEncoder
+                passwordHash = passwordEncoder.encode(createRequest.password)
             )
         }
-
     }
 
     fun activate() {

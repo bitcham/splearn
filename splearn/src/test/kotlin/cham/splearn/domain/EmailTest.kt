@@ -2,7 +2,8 @@ package cham.splearn.domain
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
+
 
 class EmailTest {
 
