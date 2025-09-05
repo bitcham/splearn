@@ -6,16 +6,19 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import org.hibernate.annotations.NaturalId
+import org.hibernate.annotations.NaturalIdCache
 
 @Entity
-@ConsistentCopyVisibility
-data class Member private constructor(
+@NaturalIdCache
+class Member private constructor(
 
-    @Id @GeneratedValue
-    val id: Long = 0,
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
 
-    @Embedded
+    @Embedded @NaturalId
     val email: Email,
 
     var nickname: String,
