@@ -32,9 +32,10 @@ class MemberRepositoryTest {
     fun duplicateEmailFail(){
         val member1 = memberRepository.save(Member.register(createMemberRegisterRequest(), createPasswordEncoder()))
 
-        val member2 = Member.register(createMemberRegisterRequest(), createPasswordEncoder())
+        val member2= Member.register(createMemberRegisterRequest(), createPasswordEncoder())
 
-        assertThatThrownBy { memberRepository.save(member2)
+        assertThatThrownBy {
+            memberRepository.save(member2)
         }.isInstanceOf(DataIntegrityViolationException::class.java)
     }
 

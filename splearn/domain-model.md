@@ -41,7 +41,8 @@
 ### Member
 _Entity_
 #### Attributes
-- `email` : ID
+- `id` : `Long` PK
+- `email` : NaturalId
 - `nickname`
 - `passwordHash`
 - `status`
@@ -65,6 +66,9 @@ _DTO_
 - `email`
 - `nickname`
 - `password`
+
+### DuplicateEmailException
+_Exception_
 
 ### Email
 _Value Object_
