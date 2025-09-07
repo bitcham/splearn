@@ -41,7 +41,7 @@ class Member private constructor(
             require(createRequest.password.isNotBlank()) { "Password cannot be blank" }
 
             return Member(
-                email = createRequest.email,
+                email = Email.of(createRequest.email),
                 nickname = createRequest.nickname,
                 passwordHash = passwordEncoder.encode(createRequest.password)
             )

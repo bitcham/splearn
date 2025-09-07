@@ -2,7 +2,9 @@ package cham.splearn.domain
 
 import org.springframework.stereotype.Component
 
-
+/**
+ * Password encoding and matching functionality.
+ */
 @Component
 interface PasswordEncoder {
     fun encode(password: String) : String

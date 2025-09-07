@@ -4,12 +4,18 @@ import cham.splearn.application.provided.MemberRegister
 import cham.splearn.application.required.EmailSender
 import cham.splearn.application.required.MemberRepository
 import cham.splearn.domain.DuplicateEmailException
+import cham.splearn.domain.Email
 import cham.splearn.domain.Member
 import cham.splearn.domain.MemberRegisterRequest
 import cham.splearn.domain.PasswordEncoder
+import jakarta.transaction.Transactional
+import jakarta.validation.Valid
 import org.springframework.stereotype.Service
+import org.springframework.validation.annotation.Validated
 
 @Service
+@Transactional
+@Validated
 class MemberService(
     private val memberRepository: MemberRepository,
     private val emailSender: EmailSender,
@@ -17,7 +23,7 @@ class MemberService(
 ) : MemberRegister {
 
 
-    override fun register(registerRequest: MemberRegisterRequest): Member {
+    override fun register(@Valid registerRequest: MemberRegisterRequest): Member {
         checkDuplicateEmail(registerRequest)
 
         val member = Member.register(registerRequest, passwordEncoder)
@@ -38,7 +44,7 @@ class MemberService(
     }
 
     private fun checkDuplicateEmail(registerRequest: MemberRegisterRequest) {
-        memberRepository.findByEmail(registerRequest.email)?.let {
+        memberRepository.findByEmail(Email.of(registerRequest.email))?.let {
             throw DuplicateEmailException("Email ${registerRequest.email} is already registered.")
         }
     }

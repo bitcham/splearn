@@ -1,8 +1,8 @@
 package cham.splearn.domain
 
-fun createMemberRegisterRequest(email: String): MemberRegisterRequest = MemberRegisterRequest(Email.of(email), "cham", "secret")
+fun createMemberRegisterRequest(email: String): MemberRegisterRequest = MemberRegisterRequest(email, "cham123", "secret1234")
 
-fun createMemberRegisterRequest(): MemberRegisterRequest = MemberRegisterRequest(Email.of("cham@splearn.com"), "cham", "secret")
+fun createMemberRegisterRequest(): MemberRegisterRequest = MemberRegisterRequest("cham@splearn.com", "cham123", "secret1234")
 
 
 fun createPasswordEncoder(): PasswordEncoder = object : PasswordEncoder {

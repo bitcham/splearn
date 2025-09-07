@@ -29,15 +29,15 @@ class MemberTest {
     @Test
     fun constructorBlankCheck() {
         assertThatThrownBy {
-            Member.register(MemberRegisterRequest(Email.of("   "), "cham", "secret"), passwordEncoder)
+            Member.register(MemberRegisterRequest("   ", "cham123", "secret1234"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
         assertThatThrownBy {
-            Member.register(MemberRegisterRequest(Email.of("cham@splearn.com"), "   ", "secret"), passwordEncoder)
+            Member.register(MemberRegisterRequest("cham@splearn.com", "   ", "secret1234"), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
 
         assertThatThrownBy {
-            Member.register(MemberRegisterRequest(Email.of("cham@splearn.com"), "cham", "   "), passwordEncoder)
+            Member.register(MemberRegisterRequest("cham@splearn.com", "cham123", "   "), passwordEncoder)
         }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
@@ -76,7 +76,7 @@ class MemberTest {
     @Test
     fun verifyPassword() {
         assertTrue{
-            member.verifyPassword("secret", passwordEncoder)
+            member.verifyPassword("secret1234", passwordEncoder)
         }
         assertFalse{
             member.verifyPassword("wrongpassword", passwordEncoder)
@@ -85,11 +85,11 @@ class MemberTest {
 
     @Test
     fun changeNickname() {
-        assertThat(member.nickname).isEqualTo("cham")
+        assertThat(member.nickname).isEqualTo("cham123")
 
-        member.changeNickname("newCham")
+        member.changeNickname("newCham123")
 
-        assertThat(member.nickname).isEqualTo("newCham")
+        assertThat(member.nickname).isEqualTo("newCham123")
     }
 
     @Test
