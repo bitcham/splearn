@@ -1,128 +1,104 @@
 package cham.splearn.domain
 
 import cham.splearn.domain.MemberStatus.PENDING
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.assertions.throwables.shouldThrow
 
 
-class MemberTest {
+class MemberTest : FunSpec({
 
-    private lateinit var member: Member
-    private lateinit var passwordEncoder: PasswordEncoder
+    lateinit var member: Member
+    lateinit var passwordEncoder: PasswordEncoder
 
-    @BeforeEach
-    fun setup(){
+    beforeEach {
         passwordEncoder = createPasswordEncoder()
-
         member = Member.register(createMemberRegisterRequest(), passwordEncoder)
-
     }
 
-    @Test
-    fun createMember() {
-        assertThat(member.status).isEqualTo(PENDING)
+    test("createMember") {
+        member.status shouldBe PENDING
     }
 
-    @Test
-    fun constructorBlankCheck() {
-        assertThatThrownBy {
+    test("constructorBlankCheck") {
+        shouldThrow<IllegalArgumentException> {
             Member.register(MemberRegisterRequest("   ", "cham123", "secret1234"), passwordEncoder)
-        }.isInstanceOf(IllegalArgumentException::class.java)
+        }
 
-        assertThatThrownBy {
+        shouldThrow<IllegalArgumentException> {
             Member.register(MemberRegisterRequest("cham@splearn.com", "   ", "secret1234"), passwordEncoder)
-        }.isInstanceOf(IllegalArgumentException::class.java)
+        }
 
-        assertThatThrownBy {
+        shouldThrow<IllegalArgumentException> {
             Member.register(MemberRegisterRequest("cham@splearn.com", "cham123", "   "), passwordEncoder)
-        }.isInstanceOf(IllegalArgumentException::class.java)
+        }
     }
 
-    @Test
-    fun activate(){
+    test("activate") {
         member.activate()
 
-        assertThat(member.status).isEqualTo(MemberStatus.ACTIVE)
+        member.status shouldBe MemberStatus.ACTIVE
     }
 
-    @Test
-    fun activateFail(){
+    test("activateFail") {
         member.activate()
 
-        assertThatThrownBy {
+        shouldThrow<IllegalStateException> {
             member.activate()
-        }.isInstanceOf(IllegalStateException::class.java)
+        }
     }
 
-    @Test
-    fun deactivate() {
+    test("deactivate") {
         member.activate()
 
         member.deactivate()
 
-        assertThat(member.status).isEqualTo(MemberStatus.DEACTIVATED)
+        member.status shouldBe MemberStatus.DEACTIVATED
     }
 
-    @Test
-    fun deactivateFail() {
-        assertThatThrownBy {
+    test("deactivateFail") {
+        shouldThrow<IllegalStateException> {
             member.deactivate()
-        }.isInstanceOf(IllegalStateException::class.java)
-    }
-
-    @Test
-    fun verifyPassword() {
-        assertTrue{
-            member.verifyPassword("secret1234", passwordEncoder)
-        }
-        assertFalse{
-            member.verifyPassword("wrongpassword", passwordEncoder)
         }
     }
 
-    @Test
-    fun changeNickname() {
-        assertThat(member.nickname).isEqualTo("cham123")
+    test("verifyPassword") {
+        member.verifyPassword("secret1234", passwordEncoder) shouldBe true
+        member.verifyPassword("wrongpassword", passwordEncoder) shouldBe false
+    }
+
+    test("changeNickname") {
+        member.nickname shouldBe "cham123"
 
         member.changeNickname("newCham123")
 
-        assertThat(member.nickname).isEqualTo("newCham123")
+        member.nickname shouldBe "newCham123"
     }
 
-    @Test
-    fun changePassword(){
+    test("changePassword") {
         member.changePassword("verysecret", passwordEncoder)
 
-        assertTrue{
-            member.verifyPassword("verysecret", passwordEncoder)
-        }
-
+        member.verifyPassword("verysecret", passwordEncoder) shouldBe true
     }
 
-    @Test
-    fun shouldBeActive(){
-        assertFalse(member.isActive())
+    test("shouldBeActive") {
+        member.isActive() shouldBe false
 
         member.activate()
 
-        assertTrue(member.isActive())
+        member.isActive() shouldBe true
 
         member.deactivate()
 
-        assertFalse(member.isActive())
+        member.isActive() shouldBe false
     }
 
-    @Test
-    fun invalidEmail(){
-        assertThatThrownBy {
+    test("invalidEmail") {
+        shouldThrow<IllegalArgumentException> {
             Member.register(createMemberRegisterRequest("invalidemail"), passwordEncoder)
-        }.isInstanceOf(IllegalArgumentException::class.java)
+        }
 
         Member.register(createMemberRegisterRequest("valid@gmail.com"), passwordEncoder)
     }
 
-
-}
+})

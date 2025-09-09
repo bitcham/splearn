@@ -1,18 +1,16 @@
 package cham.splearn.domain
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 
 
-class EmailTest {
+class EmailTest : FunSpec({
 
-    @Test
-    fun equality(){
+    test("equality") {
         val email1 = Email.of("cham@splearn.app")
         val email2 = Email.of("cham@splearn.app")
 
-        assertThat(email1).isEqualTo(email2)
+        email1 shouldBe email2
     }
 
-}
+})

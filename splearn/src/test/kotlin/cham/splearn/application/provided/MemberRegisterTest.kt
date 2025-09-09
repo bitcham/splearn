@@ -5,12 +5,13 @@ import cham.splearn.domain.DuplicateEmailException
 import cham.splearn.domain.MemberRegisterRequest
 import cham.splearn.domain.MemberStatus.PENDING
 import cham.splearn.domain.createMemberRegisterRequest
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.extensions.spring.SpringExtension
 import jakarta.transaction.Transactional
 import jakarta.validation.ConstraintViolationException
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
@@ -18,38 +19,39 @@ import org.springframework.context.annotation.Import
 @SpringBootTest
 @Transactional
 @Import(SplearnTestConfiguration::class)
-class MemberRegisterTest {
+class MemberRegisterTest : FunSpec() {
 
-    @Autowired lateinit var memberRegister: MemberRegister
+    override fun extensions() = listOf(SpringExtension)
 
-    @Test
-    fun register(){
-        val member = memberRegister.register(createMemberRegisterRequest())
+    @Autowired 
+    lateinit var memberRegister: MemberRegister
 
-        assertThat(member.id).isNotNull
-        assertThat(member.status).isEqualTo(PENDING)
-    }
+    init {
+        test("register") {
+            val member = memberRegister.register(createMemberRegisterRequest())
 
-    @Test
-    fun duplicateEmailFail(){
-        val member = memberRegister.register(createMemberRegisterRequest())
+            member.id shouldNotBe null
+            member.status shouldBe PENDING
+        }
 
-        assertThatThrownBy {
-            memberRegister.register(createMemberRegisterRequest())
-        }.isInstanceOf(DuplicateEmailException::class.java)
-    }
+        test("duplicateEmailFail") {
+            val member = memberRegister.register(createMemberRegisterRequest())
 
-    @Test
-    fun memberRegisterFail(){
-        assertMemberRegisterValidation(MemberRegisterRequest("cham@splearn.com", "sh", "secret1234"))
-        assertMemberRegisterValidation(MemberRegisterRequest("cham@splearn.com", "sh1231232131", "short"))
-        assertMemberRegisterValidation(MemberRegisterRequest("cham-splearn.com", "sh123123213", "secret1234"))
+            shouldThrow<DuplicateEmailException> {
+                memberRegister.register(createMemberRegisterRequest())
+            }
+        }
+
+        test("memberRegisterFail") {
+            assertMemberRegisterValidation(MemberRegisterRequest("cham@splearn.com", "sh", "secret1234"))
+            assertMemberRegisterValidation(MemberRegisterRequest("cham@splearn.com", "sh1231232131", "short"))
+            assertMemberRegisterValidation(MemberRegisterRequest("cham-splearn.com", "sh123123213", "secret1234"))
+        }
     }
 
     private fun assertMemberRegisterValidation(invalid: MemberRegisterRequest) {
-        assertThatThrownBy {
+        shouldThrow<ConstraintViolationException> {
             memberRegister.register(invalid)
-        }.isInstanceOf(ConstraintViolationException::class.java)
+        }
     }
-
 }

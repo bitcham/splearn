@@ -9,7 +9,8 @@
       "Bash(./gradlew test:*)",
       "Read(/C:\\Users\\ckaql\\splearn\\splearn\\src\\test\\kotlin\\cham\\splearn\\domain/**)",
       "Read(/C:\\Users\\ckaql\\splearn\\splearn\\src\\main\\kotlin\\cham\\splearn\\domain/**)",
-      "Bash(./gradlew:*)"
+      "Bash(./gradlew:*)",
+      "Bash(timeout:*)"
     ],
     "deny": [],
     "ask": []
